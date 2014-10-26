@@ -16,6 +16,18 @@ angular.module('service_twitter', [])
       console.error(error);
     });
   };
+
+  var getCityList = function(request) {
+    console.dir(request);
+    return $http({
+      method:'GET',
+      url: '/api/getCityList',
+      params:request
+    })
+    .then(function(response){
+      return response.data
+    });
+  };
   var getTrending = function(request) {
     return $http({
       method:'GET',
@@ -27,6 +39,7 @@ angular.module('service_twitter', [])
   };
   return {
     getTweets: getTweets,
-    getTrending: getTrending
+    getTrending: getTrending,
+    getCityList: getCityList
   };
 });

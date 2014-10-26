@@ -9,9 +9,7 @@ var _ = require('lodash');
 var twitterKeys = require('../twitterKeys');	
 var Twit = require('twit');
 
-var trendingPlaces ={
-  obj:''
-};
+var trendingPlaces ={};
 
 var T = new Twit({
   consumer_key :twitterKeys.consumerKey,
@@ -23,10 +21,15 @@ var T = new Twit({
 var getAvailableTrendingCities = function(callback){
   T.get('trends/available',function(err, data, response){
     if(!!err){throw 'Error: ' + err;}
-      callback(err,data);
+      trendingPlaces = data;
+      if(!!callback){
+        callback(err,data);
+      }else{
+        return data;
+      }
   });
-
 };
+
 var getClosestTrendingCity = function(query, callback){
   T.get('trends/closest',{lat: query.latitude, long: query.longitude },function(err,data,response){
     if(!!err) { throw 'Error: ' +err;}
@@ -46,9 +49,19 @@ var getCityId = function(query,trendingCities){
   }
 };
 
+var getTrendingTopicsByCity = function(cityList,callback){
+  T.get('trends/place',{id:woeid},function(err,data,response){
+    if(!!err){throw 'Error: ' + err;}
+    console.log(data," array of trends");
+    var arrayOfTrends = data[0].trends;
+    callback(err,arrayOfTrends);
+  });
+}
+
 var getTrendingTopics = function(woeid, callback){
   T.get('trends/place',{id:woeid},function(err,data,response){
     if(!!err){throw 'Error: ' + err;}
+    console.dir(data);
     var arrayOfTrends = data[0].trends;
     callback(err,arrayOfTrends);
   });
@@ -73,3 +86,4 @@ module.exports.getClosestTrendingCity = getClosestTrendingCity;
 module.exports.getCityId = getCityId;
 module.exports.getTrendingTopics = getTrendingTopics;
 module.exports.getTweetsForTrendObjects = getTweetsForTrendObjects;
+module.exports.trendingPlaces = trendingPlaces;

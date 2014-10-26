@@ -92,3 +92,8 @@ ul {
 .dashboard_title {
   margin-bottom: 30px;
 }
+
+.tweets {
+  border: 10px solid red;
+  padding: 20px;
+}
